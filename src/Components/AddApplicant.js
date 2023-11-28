@@ -55,7 +55,7 @@ function AddApplicant() {
 
         <button
           type="button"
-          className="btn btn-primary form-control"
+          className="btn btn-danger form-control"
           onClick={(e) => handleSubmit(e)}
         >
           Submit
