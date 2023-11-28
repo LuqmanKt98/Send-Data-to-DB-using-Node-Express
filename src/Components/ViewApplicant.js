@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getApplicant } from '../Service/api';
 
-function ViewApplicant({ name, email, contactNumber, address, gender }) {
+function ViewApplicant() {
+  const [applicantData, setApplicantData] = useState([]);
+
+  useEffect(() => {
+    getApplicantDetails();
+  }, []);
+
+  const getApplicantDetails = async () => {
+    try {
+      const result = await getApplicant();
+
+      // Check if 'result' is defined and has a 'data' property
+      if (result && result.data) {
+        setApplicantData(result.data);
+      } else {
+        console.error('Invalid data structure in the API response:', result);
+      }
+    } catch (error) {
+      console.error('Error fetching applicant details:', error);
+    }
+  }
+
   return (
     <div className="container mt-5 w-50">
       <h2>View Applicant</h2>
@@ -9,28 +31,19 @@ function ViewApplicant({ name, email, contactNumber, address, gender }) {
         <div className="card-body">
           <h5 className="card-title">Applicant Information</h5>
           <table className="table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Student Registration Number</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr>
-                <th scope="row">Name</th>
-                <td>{name}</td>
-              </tr>
-              <tr>
-                <th scope="row">Email</th>
-                <td>{email}</td>
-              </tr>
-              <tr>
-                <th scope="row">Contact Number</th>
-                <td>{contactNumber}</td>
-              </tr>
-              <tr>
-                <th scope="row">Address</th>
-                <td>{address}</td>
-              </tr>
-              <tr>
-                <th scope="row">Gender</th>
-                <td>{gender}</td>
-              </tr>
-              {/* Add more applicant information as needed */}
+              {applicantData.map(details => (
+                <tr key={details.id}>
+                  <td>{details.studentName}</td>
+                  <td>{details.studentRegistrationNumber}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -39,4 +52,4 @@ function ViewApplicant({ name, email, contactNumber, address, gender }) {
   );
 }
 
-export default ViewApplicant;
+export default ViewApplicant
